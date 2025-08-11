@@ -2,7 +2,10 @@ from mcp.server.fastmcp import FastMCP
 from pydantic import Field
 from mcp.server.fastmcp.prompts import base
 
-mcp = FastMCP("DocumentMCP", log_level="ERROR", stateless_http=True)
+"""This is a modified version of the MCP server that will connect with claude desktop as local
+mcp server"""
+
+mcp = FastMCP("DocumentMCP", log_level="ERROR")  # remove stateless_http=True
 
 
 docs = {
@@ -97,4 +100,8 @@ def summarize_document(doc_id: str = Field(description="Id of the document to su
     """
     return [PromptMessage(role="user", content=TextContent(type="text", text=prompt_text))]
 
-mcp_app = mcp.streamable_http_app()
+# mcp_app = mcp.streamable_http_app()
+
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")  # let Claude launch it via stdio
